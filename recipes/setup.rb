@@ -63,7 +63,7 @@ end
 service 'go-cve-dictionary server' do
   service_name 'cve_server'
   start_command "#{node['golang']['command']} run #{node['user']['home']}/go-cve-dictionary/main.go server -dbpath=#{node['user']['home']}/cve.sqlite3"
-  action [ :enable, :start ]
+  action [ :start ]
 end
 
 git 'vuls scanner' do
