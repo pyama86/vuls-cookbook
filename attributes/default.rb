@@ -12,7 +12,7 @@ default['golang']['src']['url'] = "https://storage.googleapis.com/golang/#{defau
 
 default['vuls']['go-cve-dictionary']['url'] = 'https://github.com/kotakanbe/go-cve-dictionary'
 default['vuls']['go-cve-dictionary']['branch'] = 'master'
-default['vuls']['go-cve-dictionary']['imports'] = %(
+default['vuls']['go-cve-dictionary']['imports'] = %w(
   github.com/google/subcommands
   github.com/kotakanbe/go-cve-dictionary/commands
   github.com/mattn/go-sqlite3
@@ -23,7 +23,7 @@ default['vuls']['go-cve-dictionary']['nvd']['end_year'] = '2016'
 
 default['vuls']['scanner']['url'] = 'https://github.com/future-architect/vuls.git'
 default['vuls']['scanner']['branch'] = 'master'
-default['vuls']['scanner']['imports'] = %(
+default['vuls']['scanner']['imports'] = %w(
   github.com/future-architect/vuls/commands
 )
 default['vuls']['scanner']['amazon'] = %w()
