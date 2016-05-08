@@ -60,10 +60,14 @@ execute 'fetch NVD' do
   creates "#{node['user']['home']}/cve.sqlite3"
 end
 
-service 'go-cve-dictionary server' do
-  service_name 'cve_server'
-  start_command "#{node['golang']['command']} run #{node['user']['home']}/go-cve-dictionary/main.go server -dbpath=#{node['user']['home']}/cve.sqlite3"
-  action [ :start ]
+#service 'go-cve-dictionary server' do
+#  service_name 'cve_server'
+#  start_command "#{node['golang']['command']} run #{node['user']['home']}/go-cve-dictionary/main.go server -dbpath=#{node['user']['home']}/cve.sqlite3"
+#  action [ :start ]
+#end
+
+execute 'go-cve-dictionary server' do
+  command "#{node['golang']['command']} run #{node['user']['home']}/go-cve-dictionary/main.go server -dbpath=#{node['user']['home']}/cve.sqlite3 2>&1 &"
 end
 
 git 'vuls scanner' do
