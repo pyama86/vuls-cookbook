@@ -67,12 +67,19 @@ service 'go-cve-dictionary server' do
   action [ :enable, :start ]
 end
 
-git 'vuls' do
+git 'vuls scanner' do
   destination "#{node['user']['home']}/vuls"
   repository node['vuls']['scanner']['url']
   revision node['vuls']['scanner']['branch']
   user node['user']['name']
   group node['user']['name']
+end
+
+node['vuls']['scanner']['imports'].each do |pack|
+  execute "install #{pack} for vuls scanner" do
+    command "go get #{pack}"
+    creates "#{node['golang']['root']}/src/#{pack}"
+  end
 end
 
 template "#{node['user']['home']}/config.toml" do
