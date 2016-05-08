@@ -6,7 +6,8 @@ default['user']['home'] = "/home/#{default['user']['name']}"
 default['golang']['version'] = '1.6'
 default['golang']['arch'] = 'amd64'
 default['golang']['root_dir'] = '/usr/local'
-default['golang']['root'] = '/usr/local/go'
+default['golang']['root'] = "#{default['golang']['root_dir']}/go"
+default['golang']['command'] = "#{default['golang']['root']}/bin/go"
 default['golang']['src']['name'] = "go#{default['golang']['version']}.linux-#{default['golang']['arch']}.tar.gz"
 default['golang']['src']['url'] = "https://storage.googleapis.com/golang/#{default['golang']['src']['name']}"
 

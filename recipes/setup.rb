@@ -22,7 +22,6 @@ ruby_block "source_go_env" do
     ENV['GOOS'] = 'linux'
     ENV['GOARCH'] = node['golang']['arch']
     ENV['GOROOT'] = node['golang']['root']
-    ENV['PATH'] = "PATH=$PATH:$GOROOT/bin:$GOPATH/bin"
   end
   action :run
 end
@@ -50,20 +49,20 @@ end
 
 node['vuls']['go-cve-dictionary']['imports'].each do |pack|
   execute "install #{pack} for go-cve-dictionary" do
-    command "go get #{pack}"
+    command "#{node['golang']['command']} get #{pack}"
     creates "#{node['golang']['root']}/src/#{pack}"
   end
 end
 
 execute 'fetch NVD' do
   cwd node['user']['home']
-  command "for i in {#{node['vuls']['go-cve-dictionary']['nvd']['start_year']}..#{node['vuls']['go-cve-dictionary']['nvd']['end_year']}}; do go run go-cve-dictionary/main.go fetchnvd -years $i; done"
+  command "for i in {#{node['vuls']['go-cve-dictionary']['nvd']['start_year']}..#{node['vuls']['go-cve-dictionary']['nvd']['end_year']}}; do #{node['golang']['command']} run go-cve-dictionary/main.go fetchnvd -years $i; done"
   creates "#{node['user']['home']}/cve.sqlite3"
 end
 
 service 'go-cve-dictionary server' do
   service_name 'cve_server'
-  start_command "go run #{node['user']['home']}/go-cve-dictionary/main.go server -dbpath=#{node['user']['home']}/cve.sqlite3"
+  start_command "#{node['golang']['command']} run #{node['user']['home']}/go-cve-dictionary/main.go server -dbpath=#{node['user']['home']}/cve.sqlite3"
   action [ :enable, :start ]
 end
 
@@ -77,7 +76,7 @@ end
 
 node['vuls']['scanner']['imports'].each do |pack|
   execute "install #{pack} for vuls scanner" do
-    command "go get #{pack}"
+    command "#{node['golang']['command']} get #{pack}"
     creates "#{node['golang']['root']}/src/#{pack}"
   end
 end
@@ -97,11 +96,11 @@ end
 
 execute 'vuls prepare' do
   cwd node['user']['home']
-  command "go run #{node['user']['home']}/vuls/main.go prepare"
+  command "#{node['golang']['command']} run #{node['user']['home']}/vuls/main.go prepare"
 end
 
 execute 'vuls scan' do
   cwd node['user']['home']
-  command "go run #{node['user']['home']}/vuls/main.go scan"
+  command "#{node['golang']['command']} run #{node['user']['home']}/vuls/main.go scan"
 end
 
