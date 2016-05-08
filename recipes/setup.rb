@@ -13,7 +13,7 @@ node['package']['names'].each do |pack|
 end
 
 execute 'create ssh keys' do
-  command "ssh-keygen -t rsa -b 4096 -N "" -f #{node['user']['home']}/.ssh/id_rsa"
+  command "ssh-keygen -t rsa -b 4096 -N '' -f #{node['user']['home']}/.ssh/id_rsa"
 end
 
 ruby_block "source_go_env" do
