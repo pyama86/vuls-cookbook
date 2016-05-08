@@ -1,0 +1,16 @@
+[servers]
+
+<% 
+@servers.each do |os, detail|
+  detail['servers'].each do |server|
+  ip_name = server.gsub(/\./,'_') 
+%>
+[servers.<%=os%>_<%=ip_name%>]
+host         = <%=server%>
+port        = "22"
+user        = <%=detail['user']%>
+keyPath     = "/home/ec2-user/.ssh/id_rsa"
+<% 
+  end 
+end
+%>
