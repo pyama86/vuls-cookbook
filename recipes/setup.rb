@@ -34,7 +34,7 @@ execute 'install golang' do
   notifies :create, "ruby_block[source_go_env]", :immediately
 end
 
-dirctory '/var/log/vuls' do
+directory '/var/log/vuls' do
   owner node['user']['name']
   group node['user']['name']
   mode '0700'
