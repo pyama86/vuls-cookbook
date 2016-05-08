@@ -1,4 +1,4 @@
-default['package']['names'] = %w(vim git gcc sqlite)
+default['package']['names'] = %w(wget vim git gcc sqlite)
 
 default['user']['name'] = 'ec2-user'
 default['user']['home'] = "/home/#{default['user']['name']}"
