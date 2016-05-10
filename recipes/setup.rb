@@ -72,7 +72,7 @@ template "/etc/init.d/go-cve-dictionary" do
   owner 'root'
   group 'root'
   mode '0755'
-  variables :servers => {
+  variables :vars => {
     'go_root' => node['golang']['root'],
     'go_path' => "#{node['user']['home']}/go",
     'user_home'=> node['user']['home']
