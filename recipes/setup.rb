@@ -66,8 +66,21 @@ end
 #  action [ :start ]
 #end
 
+
+template "/etc/init.d/go-cve-dictionary" do
+  source 'go-cve-dictionary.erb'
+  owner 'root'
+  group 'root'
+  mode '0755'
+  variables :servers => {
+    'go_root' => node['golang']['root'],
+    'go_path' => "#{node['user']['home']}/go",
+    'user_home'=> node['user']['home']
+  }
+end
+
 execute 'go-cve-dictionary server' do
-  command "#{node['golang']['command']} run #{node['user']['home']}/go-cve-dictionary/main.go server -dbpath=#{node['user']['home']}/cve.sqlite3 2>&1 &"
+  command "/etc/init.d/go-cve-dictionary start"
 end
 
 git 'vuls scanner' do
