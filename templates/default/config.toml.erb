@@ -6,9 +6,9 @@
   ip_name = server.gsub(/\./,'_') 
 %>
 [servers.<%=os%>_<%=ip_name%>]
-host         = <%=server%>
+host         = "<%=server%>"
 port        = "22"
-user        = <%=detail['user']%>
+user        = "<%=detail['user']%>"
 keyPath     = "/home/ec2-user/.ssh/id_rsa"
 <% 
   end 
