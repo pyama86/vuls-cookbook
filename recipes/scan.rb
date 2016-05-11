@@ -14,17 +14,17 @@ template "#{node['user']['home']}/config.toml" do
     'ubuntu' => { 'user' => 'ubuntu', 'servers' => node['vuls']['scanner']['server']['ubuntu'] },
     'redhat' => { 'user' => 'root', 'servers' => node['vuls']['scanner']['server']['redhat'] },
   }
-  only_if has_server
+  only_if { has_server }
 end
 
 execute 'vuls prepare' do
   cwd node['user']['home']
   command "#{node['golang']['command']} run #{node['user']['home']}/vuls/main.go prepare"
-  only_if has_server
+  only_if { has_server }
 end
 
 execute 'vuls scan' do
   cwd node['user']['home']
   command "#{node['golang']['command']} run #{node['user']['home']}/vuls/main.go scan"
-  only_if has_server
+  only_if { has_server }
 end
