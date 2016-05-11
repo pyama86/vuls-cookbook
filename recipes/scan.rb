@@ -1,6 +1,6 @@
 has_server = false
 node['vuls']['scanner']['server'].each do |os, servers|
-  has_server = ture unless servers.empty?
+  has_server = true unless servers.empty?
 end
 
 template "#{node['user']['home']}/config.toml" do
