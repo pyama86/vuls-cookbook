@@ -27,10 +27,10 @@ default['vuls']['scanner']['branch'] = 'master'
 default['vuls']['scanner']['imports'] = %w(
   github.com/future-architect/vuls/commands
 )
-default['vuls']['scanner']['amazon'] = %w()
-default['vuls']['scanner']['centos'] = %w()
-default['vuls']['scanner']['ubuntu'] = %w()
-default['vuls']['scanner']['redhat'] = %w()
+default['vuls']['scanner']['server']['amazon'] = %w()
+default['vuls']['scanner']['server']['centos'] = %w()
+default['vuls']['scanner']['server']['ubuntu'] = %w()
+default['vuls']['scanner']['server']['redhat'] = %w()
 
 
 
