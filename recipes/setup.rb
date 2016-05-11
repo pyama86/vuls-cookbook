@@ -27,15 +27,15 @@ template "/etc/profile.d/goenv.sh" do
   }
 end
 
-#ruby_block "source_go_env" do
-#  block do
-#    ENV['GOPATH'] = "#{node['user']['home']}/go"
-#    ENV['GOOS'] = 'linux'
-#    ENV['GOARCH'] = node['golang']['arch']
-#    ENV['GOROOT'] = node['golang']['root']
-#  end
-#  action :run
-#end
+ruby_block "source_go_env" do
+  block do
+    ENV['GOPATH'] = "#{node['user']['home']}/go"
+    ENV['GOOS'] = 'linux'
+    ENV['GOARCH'] = node['golang']['arch']
+    ENV['GOROOT'] = node['golang']['root']
+  end
+  action :run
+end
 
 execute 'install golang' do
   command "wget #{node['golang']['src']['url']} -P #{node['user']['home']} &&
