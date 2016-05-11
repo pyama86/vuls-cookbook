@@ -16,6 +16,11 @@ execute 'create ssh keys' do
   command "ssh-keygen -t rsa -b 4096 -N '' -f #{node['user']['home']}/.ssh/id_rsa"
 end
 
+execute 'publish id_rsa.pub' do
+  command "ruby -run -e httpd #{node['user']['home']}/.ssh/id_rsa.pub -p 1414 >/dev/null 2>&1 &"
+  only_if { File.exists?("#{node['user']['home']}/.ssh/id_rsa.pub") }
+end
+
 template "/etc/profile.d/goenv.sh" do
   source 'goenv.sh.erb'
   owner 'root'
