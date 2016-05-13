@@ -18,12 +18,14 @@ template "#{node['user']['home']}/config.toml" do
 end
 
 execute 'vuls prepare' do
+  user node['user']['name']
   cwd node['user']['home']
   command "#{node['golang']['command']} run #{node['user']['home']}/vuls/main.go prepare"
   only_if { has_server }
 end
 
 execute 'vuls scan' do
+  user node['user']['name']
   cwd node['user']['home']
   command "#{node['golang']['command']} run #{node['user']['home']}/vuls/main.go scan"
   only_if { has_server }
