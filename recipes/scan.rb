@@ -20,7 +20,7 @@ template "#{node['user']['home']}/config.toml" do
   mode '0755'
   variables :servers => {
     'amazon' => { 'user' => 'ec2-user', 'servers' => node['vuls']['scanner']['server']['amazon'] },
-    'centos' => { 'user' => 'root', 'servers' => node['vuls']['scanner']['server']['centos'] },
+    'centos' => { 'user' => 'centos', 'servers' => node['vuls']['scanner']['server']['centos'] },
     'ubuntu' => { 'user' => 'ubuntu', 'servers' => node['vuls']['scanner']['server']['ubuntu'] },
     'redhat' => { 'user' => 'root', 'servers' => node['vuls']['scanner']['server']['redhat'] },
   }
