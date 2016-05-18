@@ -19,7 +19,7 @@ default['vuls']['go-cve-dictionary']['imports'] = %w(
   github.com/mattn/go-sqlite3
   golang.org/x/net/context
 )
-default['vuls']['go-cve-dictionary']['nvd']['start_year'] = '2002'
+default['vuls']['go-cve-dictionary']['nvd']['start_year'] = '2011'
 default['vuls']['go-cve-dictionary']['nvd']['end_year'] = '2016'
 
 default['vuls']['scanner']['url'] = 'https://github.com/future-architect/vuls.git'
@@ -32,18 +32,3 @@ default['vuls']['scanner']['server']['centos'] = %w()
 default['vuls']['scanner']['server']['ubuntu'] = %w()
 default['vuls']['scanner']['server']['redhat'] = %w()
 
-
-
-
-
-
-
-
-default['deploy']['user']['name'] = 'circle'
-default['deploy']['user']['id'] = '1500'
-default['deploy']['user']['home'] = "/home/#{default['deploy']['user']['name']}"
-default['deploy']['user']['shell'] = "/bin/bash"
-
-
-default['git']['url'] = 'https://github.com/3a-classic/score-api-server.git'
-default['git']['branchs'] = %w(master stage)
