@@ -1,3 +1,12 @@
+ruby_block "source_go_env" do
+  block do
+    ENV['GOPATH'] = "#{node['user']['home']}/go"
+    ENV['GOOS'] = 'linux'
+    ENV['GOARCH'] = node['golang']['arch']
+    ENV['GOROOT'] = node['golang']['root']
+  end
+  action :run
+end
 
 execute 'fetch NVD' do
   cwd node['user']['home']

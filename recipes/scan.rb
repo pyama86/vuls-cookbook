@@ -1,3 +1,13 @@
+ruby_block "source_go_env" do
+  block do
+    ENV['GOPATH'] = "#{node['user']['home']}/go"
+    ENV['GOOS'] = 'linux'
+    ENV['GOARCH'] = node['golang']['arch']
+    ENV['GOROOT'] = node['golang']['root']
+  end
+  action :run
+end
+
 has_server = false
 node['vuls']['scanner']['server'].each do |os, servers|
   has_server = true unless servers.empty?
