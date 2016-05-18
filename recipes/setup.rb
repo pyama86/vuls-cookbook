@@ -13,10 +13,12 @@ node['package']['names'].each do |pack|
 end
 
 execute 'create ssh keys' do
+  user node['user']['name']
   command "ssh-keygen -t rsa -b 4096 -N '' -f #{node['user']['home']}/.ssh/id_rsa"
 end
 
 execute 'publish id_rsa.pub' do
+  user node['user']['name']
   command "ruby -run -e httpd #{node['user']['home']}/.ssh/id_rsa.pub -p 1414 >/dev/null 2>&1 &"
   only_if { File.exists?("#{node['user']['home']}/.ssh/id_rsa.pub") }
 end
