@@ -44,6 +44,3 @@ default['deploy']['user']['id'] = '1500'
 default['deploy']['user']['home'] = "/home/#{default['deploy']['user']['name']}"
 default['deploy']['user']['shell'] = "/bin/bash"
 
-
-default['git']['url'] = 'https://github.com/3a-classic/score-api-server.git'
-default['git']['branchs'] = %w(master stage)
