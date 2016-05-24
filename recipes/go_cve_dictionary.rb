@@ -10,7 +10,7 @@ end
 
 execute 'fetch NVD' do
   cwd node['user']['home']
-  command "for i in {#{node['vuls']['go-cve-dictionary']['nvd']['start_year']}..#{node['vuls']['go-cve-dictionary']['nvd']['end_year']}}; do #{node['golang']['command']} run go-cve-dictionary/main.go fetchnvd -years $i; done"
+  command "number=#{node['vuls']['go-cve-dictionary']['nvd']['start_year']};while [ \"$number\" -lt #{node['vuls']['go-cve-dictionary']['nvd']['end_year']} ]; do #{node['golang']['command']} run go-cve-dictionary/main.go fetchnvd -years $number; number=`expr $number + 1`; done"
   creates "#{node['user']['home']}/cve.sqlite3"
 end
 

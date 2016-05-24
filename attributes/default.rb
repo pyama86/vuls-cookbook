@@ -31,4 +31,3 @@ default['vuls']['scanner']['server']['amazon'] = %w()
 default['vuls']['scanner']['server']['centos'] = %w()
 default['vuls']['scanner']['server']['ubuntu'] = %w()
 default['vuls']['scanner']['server']['redhat'] = %w()
-
