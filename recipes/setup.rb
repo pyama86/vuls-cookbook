@@ -15,6 +15,7 @@ end
 execute 'create ssh keys' do
   user node['user']['name']
   command "ssh-keygen -t rsa -b 4096 -N '' -f #{node['user']['home']}/.ssh/id_rsa"
+  not_if { File.exists?("#{node['user']['home']}/.ssh/id_rsa.pub") }
 end
 
 execute 'publish id_rsa.pub' do
