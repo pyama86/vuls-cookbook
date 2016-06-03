@@ -25,6 +25,9 @@ default['vuls']['go-cve-dictionary']['nvd']['end_year'] = '2016'
 default['vuls']['scanner']['url'] = 'https://github.com/future-architect/vuls.git'
 default['vuls']['scanner']['branch'] = 'master'
 default['vuls']['scanner']['imports'] = %w(
+  golang.org/x/net/context
+  github.com/google/subcommands
+  github.com/mattn/go-sqlite3
   github.com/future-architect/vuls/commands
 )
 default['vuls']['scanner']['server']['amazon'] = %w()

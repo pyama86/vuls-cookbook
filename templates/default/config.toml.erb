@@ -9,7 +9,7 @@
 host         = "<%=server%>"
 port        = "22"
 user        = "<%=detail['user']%>"
-keyPath     = "/home/ec2-user/.ssh/id_rsa"
+keyPath     = "/home/<%=detail['user']%>/.ssh/id_rsa"
 <% 
   end 
 end
