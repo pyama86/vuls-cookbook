@@ -14,7 +14,7 @@ go_root = "#{node['golang']['root_dir']}/go"
 go_cmd = "#{go_root}/bin/go"
 go_src_name = "go#{node['golang']['version']}.linux-#{node['golang']['arch']}.tar.gz"
 go_src_url = "https://storage.googleapis.com/golang/#{go_src_name}"
-go_cve_distionary_abs_path = "#{go_root}/src/#{node['vuls']['go-cve-dictionary']['path']}"
+go_cve_dictionary_abs_path = "#{go_root}/src/#{node['vuls']['go-cve-dictionary']['path']}"
 scanner_abs_path = "#{go_root}/src/#{node['vuls']['scanner']['path']}"
 
 node['package']['names'].each do |pack|
@@ -24,13 +24,13 @@ end
 execute 'create ssh keys' do
   user node['user']['name']
   command "ssh-keygen -t rsa -b 4096 -N '' -f #{user_home}/.ssh/id_rsa"
-  not_if { File.exists?("#{user_home}/.ssh/id_rsa.pub") }
+  not_if { File.exists?("#{user_home}/.ssh/id_rsa.pub") && ["setting"]["publish_ssh_pub_key"] }
 end
 
 execute 'publish id_rsa.pub' do
   user node['user']['name']
   command "ruby -run -e httpd #{user_home}/.ssh/id_rsa.pub -p 1414 >/dev/null 2>&1 &"
-  only_if { File.exists?("#{user_home}/.ssh/id_rsa.pub") }
+  only_if { File.exists?("#{user_home}/.ssh/id_rsa.pub") && node["setting"]["publish_ssh_pub_key"] }
 end
 
 template "/etc/profile.d/goenv.sh" do
@@ -100,6 +100,6 @@ end
 
 execute 'fetch NVD' do
   cwd user_home
-  command "number=#{node['vuls']['go-cve-dictionary']['nvd']['start_year']};while [ \"$number\" -lt #{node['vuls']['go-cve-dictionary']['nvd']['end_year']} ]; do #{go_cve_distionary_abs_path}/go-cve-dictionary fetchnvd -years $number; number=`expr $number + 1`; done"
+  command "number=#{node['vuls']['go-cve-dictionary']['nvd']['start_year']};while [ \"$number\" -lt #{node['vuls']['go-cve-dictionary']['nvd']['end_year']} ]; do #{go_cve_dictionary_abs_path}/go-cve-dictionary fetchnvd -years $number; number=`expr $number + 1`; done"
   creates "#{user_home}/cve.sqlite3"
 end
