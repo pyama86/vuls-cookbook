@@ -82,7 +82,7 @@ end
 
 execute "install package for go-cve-dictionary" do
   cwd go_cve_dictionary_abs_path
-  command "#{go_cmd}/glide install && #{go_bin}/go build"
+  command "#{go_bin}/glide install && #{go_bin}/go build"
 end
 
 execute "git clone scanner" do
@@ -93,7 +93,7 @@ end
 
 execute "install package for scanner" do
   cwd scanner_abs_path
-  command "#{go_cmd}/glide install && #{go_cmd}/go build"
+  command "#{go_bin}/glide install && #{go_cmd}/go build"
 end
 
 execute 'fetch NVD' do
