@@ -73,6 +73,13 @@ execute "install glide" do
   command "#{go_cmd} get github.com/Masterminds/glide"
 end
 
+directory go_cve_dictionary_abs_path do
+  owner node['user']['name']
+  group node['user']['name']
+  mode '0755'
+  action :create
+end
+
 git "go-cve-dictionary" do
   destination go_cve_dictionary_abs_path
   repository "http://#{node['vuls']["go-cve-dictionary"]['path']}"
@@ -84,6 +91,13 @@ end
 execute "install package for go-cve-dictionary" do
   cwd go_cve_dictionary_abs_path
   command "glide install && #{go_cmd} build"
+end
+
+directory scanner_abs_path do
+  owner node['user']['name']
+  group node['user']['name']
+  mode '0755'
+  action :create
 end
 
 git "scanner" do
