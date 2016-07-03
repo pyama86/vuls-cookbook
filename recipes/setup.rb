@@ -41,6 +41,7 @@ ruby_block "source_go_env" do
     ENV['GOOS'] = 'linux'
     ENV['GOARCH'] = node['golang']['arch']
     ENV['GOROOT'] = node['golang']['root']
+    ENV['GO15VENDOREXPERIMENT'] = 1
   end
   action :run
 end
@@ -58,33 +59,27 @@ directory '/var/log/vuls' do
   mode '0700'
 end
 
-git "go-cve-dictionary" do
-  destination "#{node['user']['home']}/go-cve-dictionary"
-  repository node['vuls']['go-cve-dictionary']['url']
-  revision node['vuls']['go-cve-dictionary']['branch']
-  user node['user']['name']
-  group node['user']['name']
+execute "install glide" do
+  command "go get github.com/Masterminds/glide"
 end
 
-node['vuls']['go-cve-dictionary']['imports'].each do |pack|
-  execute "install #{pack} for go-cve-dictionary" do
-    command "#{node['golang']['command']} get #{pack}"
-    creates "#{node['golang']['root']}/src/#{pack}"
+['go-cve-dictionary', 'scanner'].each do |repo|
+  git repo do
+    destination node['vuls'][repo]['abs_path']
+    repository node['vuls'][repo]['url']
+    revision node['vuls'][repo]['branch']
+    user node['user']['name']
+    group node['user']['name']
+  end
+  
+  execute "install package for #{repo}" do
+    cwd node['vuls'][repo]['abs_path']
+    command "glide install && go build"
   end
 end
 
-git 'vuls scanner' do
-  destination "#{node['user']['home']}/vuls"
-  repository node['vuls']['scanner']['url']
-  revision node['vuls']['scanner']['branch']
-  user node['user']['name']
-  group node['user']['name']
+execute 'fetch NVD' do
+  cwd node['user']['home']
+  command "number=#{node['vuls']['go-cve-dictionary']['nvd']['start_year']};while [ \"$number\" -lt #{node['vuls']['go-cve-dictionary']['nvd']['end_year']} ]; do #{node['vuls']['go-cve-dictionary']['abs_path']}/go-cve-dictionary fetchnvd -years $number; number=`expr $number + 1`; done"
+  creates "#{node['user']['home']}/cve.sqlite3"
 end
-
-node['vuls']['scanner']['imports'].each do |pack|
-  execute "install #{pack} for vuls scanner" do
-    command "#{node['golang']['command']} get #{pack}"
-    creates "#{node['golang']['root']}/src/#{pack}"
-  end
-end
-

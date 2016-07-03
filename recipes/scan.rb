@@ -30,13 +30,13 @@ end
 execute 'vuls prepare' do
   user node['user']['name']
   cwd node['user']['home']
-  command "#{node['golang']['command']} run #{node['user']['home']}/vuls/main.go prepare"
+  command "#{node['vuls']['scanner']['abs_path']}/vuls prepare"
   only_if { has_server }
 end
 
 execute 'vuls scan' do
   user node['user']['name']
   cwd node['user']['home']
-  command "#{node['golang']['command']} run #{node['user']['home']}/vuls/main.go scan"
+  command "#{node['vuls']['scanner']['abs_path']}/vuls scan"
   only_if { has_server }
 end
