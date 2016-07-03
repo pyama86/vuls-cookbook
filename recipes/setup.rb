@@ -12,7 +12,7 @@
 user_home = "/home/#{node['user']['name']}"
 go_root = "#{node['golang']['root_dir']}/go"
 go_path = "#{user_home}/go"
-go_cmd = "#{go_root}/bin/go"
+go_bin = "#{go_root}/bin"
 go_src_name = "go#{node['golang']['version']}.linux-#{node['golang']['arch']}.tar.gz"
 go_src_url = "https://storage.googleapis.com/golang/#{go_src_name}"
 go_cve_dictionary_abs_path = "#{go_path}/src/#{node['vuls']['go-cve-dictionary']['path']}"
@@ -70,7 +70,7 @@ directory '/var/log/vuls' do
 end
 
 execute "install glide" do
-  command "GOPATH=#{go_path} && #{go_cmd} get github.com/Masterminds/glide"
+  command "GOPATH=#{go_path} && #{go_bin}/go get github.com/Masterminds/glide"
   user node['user']['name']
 end
 
@@ -82,7 +82,7 @@ end
 
 execute "install package for go-cve-dictionary" do
   cwd go_cve_dictionary_abs_path
-  command "glide install && #{go_cmd} build"
+  command "#{go_cmd}/glide install && #{go_bin}/go build"
 end
 
 execute "git clone scanner" do
@@ -93,7 +93,7 @@ end
 
 execute "install package for scanner" do
   cwd scanner_abs_path
-  command "glide install && #{go_cmd} build"
+  command "#{go_cmd}/glide install && #{go_cmd}/go build"
 end
 
 execute 'fetch NVD' do
