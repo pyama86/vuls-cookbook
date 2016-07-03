@@ -11,9 +11,11 @@
 # set vars
 user_home = "/home/#{node['user']['name']}"
 go_root = "#{node['golang']['root_dir']}/go"
+go_cmd = "#{go_root}/bin/go"
 go_src_name = "go#{node['golang']['version']}.linux-#{node['golang']['arch']}.tar.gz"
 go_src_url = "https://storage.googleapis.com/golang/#{go_src_name}"
 go_cve_distionary_abs_path = "#{go_root}/src/#{node['vuls']['go-cve-dictionary']['path']}"
+scanner_abs_path = "#{go_root}/src/#{node['vuls']['scanner']['path']}"
 
 node['package']['names'].each do |pack|
   package pack
@@ -67,22 +69,33 @@ directory '/var/log/vuls' do
 end
 
 execute "install glide" do
-  command "go get github.com/Masterminds/glide"
+  command "#{go_cmd} get github.com/Masterminds/glide"
 end
 
-['go-cve-dictionary', 'scanner'].each do |repo|
-  git repo do
-    destination node['vuls'][repo]['abs_path']
-    repository "http://#{node['vuls'][repo]['path']}"
-    revision node['vuls'][repo]['branch']
-    user node['user']['name']
-    group node['user']['name']
-  end
-  
-  execute "install package for #{repo}" do
-    cwd node['vuls'][repo]['abs_path']
-    command "glide install && go build"
-  end
+git "go-cve-dictionary" do
+  destination go_cve_dictionary_abs_path
+  repository "http://#{node['vuls']["go-cve-dictionary"]['path']}"
+  revision node['vuls']["go-cve-dictionary"]['branch']
+  user node['user']['name']
+  group node['user']['name']
+end
+
+execute "install package for go-cve-dictionary" do
+  cwd go_cve_dictionary_abs_path
+  command "glide install && #{go_cmd} build"
+end
+
+git "scanner" do
+  destination scanner_abs_path
+  repository "http://#{node['vuls']["scanner"]['path']}"
+  revision node['vuls']["scanner"]['branch']
+  user node['user']['name']
+  group node['user']['name']
+end
+
+execute "install package for scanner" do
+  cwd scanner_abs_path
+  command "glide install && #{go_cmd} build"
 end
 
 execute 'fetch NVD' do
