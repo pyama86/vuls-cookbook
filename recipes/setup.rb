@@ -73,17 +73,8 @@ execute "install glide" do
   command "#{go_cmd} get github.com/Masterminds/glide"
 end
 
-directory go_cve_dictionary_abs_path do
-  owner node['user']['name']
-  group node['user']['name']
-  mode '0755'
-  action :create
-end
-
-git "go-cve-dictionary" do
-  destination go_cve_dictionary_abs_path
-  repository "http://#{node['vuls']["go-cve-dictionary"]['path']}"
-  revision node['vuls']["go-cve-dictionary"]['branch']
+execute "git clone go-cve-dictionary" do
+  command "git clone http://#{node['vuls']["go-cve-dictionary"]['path']} -b #{node['vuls']['go-cve-dictionary']['branch']} #{go_cve_dictionary_abs_path}"
   user node['user']['name']
   group node['user']['name']
 end
@@ -93,17 +84,8 @@ execute "install package for go-cve-dictionary" do
   command "glide install && #{go_cmd} build"
 end
 
-directory scanner_abs_path do
-  owner node['user']['name']
-  group node['user']['name']
-  mode '0755'
-  action :create
-end
-
-git "scanner" do
-  destination scanner_abs_path
-  repository "http://#{node['vuls']["scanner"]['path']}"
-  revision node['vuls']["scanner"]['branch']
+execute "git clone scanner" do
+  command "git clone http://#{node['vuls']["scanner"]['path']} -b #{node['vuls']['scanner']['branch']} #{go_cve_dictionary_abs_path}"
   user node['user']['name']
   group node['user']['name']
 end
