@@ -11,11 +11,12 @@
 # set vars
 user_home = "/home/#{node['user']['name']}"
 go_root = "#{node['golang']['root_dir']}/go"
+go_path = "#{user_home}/go"
 go_cmd = "#{go_root}/bin/go"
 go_src_name = "go#{node['golang']['version']}.linux-#{node['golang']['arch']}.tar.gz"
 go_src_url = "https://storage.googleapis.com/golang/#{go_src_name}"
-go_cve_dictionary_abs_path = "#{go_root}/src/#{node['vuls']['go-cve-dictionary']['path']}"
-scanner_abs_path = "#{go_root}/src/#{node['vuls']['scanner']['path']}"
+go_cve_dictionary_abs_path = "#{go_path}/src/#{node['vuls']['go-cve-dictionary']['path']}"
+scanner_abs_path = "#{go_path}/src/#{node['vuls']['scanner']['path']}"
 
 node['package']['names'].each do |pack|
   package pack
@@ -40,13 +41,13 @@ template "/etc/profile.d/goenv.sh" do
   mode '0755'
   variables :vars => {
     'go_root' => go_root,
-    'go_path' => "#{user_home}/go"
+    'go_path' => go_path
   }
 end
 
 ruby_block "source_go_env" do
   block do
-    ENV['GOPATH'] = "#{user_home}/go"
+    ENV['GOPATH'] = go_path
     ENV['GOOS'] = 'linux'
     ENV['GOARCH'] = node['golang']['arch']
     ENV['GOROOT'] = go_root
