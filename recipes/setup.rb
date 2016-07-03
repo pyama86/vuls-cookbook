@@ -70,7 +70,7 @@ directory '/var/log/vuls' do
 end
 
 execute "install glide" do
-  command "#{go_cmd} get github.com/Masterminds/glide"
+  command "GOPATH=#{go_path} && #{go_cmd} get github.com/Masterminds/glide"
   user node['user']['name']
 end
 
