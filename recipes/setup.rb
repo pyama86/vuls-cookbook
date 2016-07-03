@@ -8,20 +8,27 @@
 #
 #
 
+# set vars
+user_home = "/home/#{node['user']['name']}"
+go_root = "#{node['golang']['root_dir']}/go"
+go_src_name = "go#{node['golang']['version']}.linux-#{node['golang']['arch']}.tar.gz"
+go_src_url = "https://storage.googleapis.com/golang/#{go_src_name}"
+go_cve_distionary_abs_path = "#{go_root}/src/#{node['vuls']['go-cve-dictionary']['path']}"
+
 node['package']['names'].each do |pack|
   package pack
 end
 
 execute 'create ssh keys' do
   user node['user']['name']
-  command "ssh-keygen -t rsa -b 4096 -N '' -f #{node['user']['home']}/.ssh/id_rsa"
-  not_if { File.exists?("#{node['user']['home']}/.ssh/id_rsa.pub") }
+  command "ssh-keygen -t rsa -b 4096 -N '' -f #{user_home}/.ssh/id_rsa"
+  not_if { File.exists?("#{user_home}/.ssh/id_rsa.pub") }
 end
 
 execute 'publish id_rsa.pub' do
   user node['user']['name']
-  command "ruby -run -e httpd #{node['user']['home']}/.ssh/id_rsa.pub -p 1414 >/dev/null 2>&1 &"
-  only_if { File.exists?("#{node['user']['home']}/.ssh/id_rsa.pub") }
+  command "ruby -run -e httpd #{user_home}/.ssh/id_rsa.pub -p 1414 >/dev/null 2>&1 &"
+  only_if { File.exists?("#{user_home}/.ssh/id_rsa.pub") }
 end
 
 template "/etc/profile.d/goenv.sh" do
@@ -30,26 +37,26 @@ template "/etc/profile.d/goenv.sh" do
   group 'root'
   mode '0755'
   variables :vars => {
-    'go_root' => node['golang']['root'],
-    'go_path' => "#{node['user']['home']}/go"
+    'go_root' => go_root,
+    'go_path' => "#{user_home}/go"
   }
 end
 
 ruby_block "source_go_env" do
   block do
-    ENV['GOPATH'] = "#{node['user']['home']}/go"
+    ENV['GOPATH'] = "#{user_home}/go"
     ENV['GOOS'] = 'linux'
     ENV['GOARCH'] = node['golang']['arch']
-    ENV['GOROOT'] = node['golang']['root']
-    ENV['GO15VENDOREXPERIMENT'] = 1
+    ENV['GOROOT'] = go_root
+    ENV['GO15VENDOREXPERIMENT'] = "1"
   end
   action :run
 end
 
 execute 'install golang' do
-  command "wget #{node['golang']['src']['url']} -P #{node['user']['home']} &&
-           tar xzf #{node['user']['home']}/#{node['golang']['src']['name']} -C #{node['golang']['root_dir']}"
-  creates  node['golang']['root']
+  command "wget #{go_src_url} -P #{user_home} &&
+           tar xzf #{user_home}/#{go_src_name} -C #{node['golang']['root_dir']}"
+  creates  go_root
   notifies :create, "ruby_block[source_go_env]", :immediately
 end
 
@@ -66,7 +73,7 @@ end
 ['go-cve-dictionary', 'scanner'].each do |repo|
   git repo do
     destination node['vuls'][repo]['abs_path']
-    repository node['vuls'][repo]['url']
+    repository "http://#{node['vuls'][repo]['path']}"
     revision node['vuls'][repo]['branch']
     user node['user']['name']
     group node['user']['name']
@@ -79,7 +86,7 @@ end
 end
 
 execute 'fetch NVD' do
-  cwd node['user']['home']
-  command "number=#{node['vuls']['go-cve-dictionary']['nvd']['start_year']};while [ \"$number\" -lt #{node['vuls']['go-cve-dictionary']['nvd']['end_year']} ]; do #{node['vuls']['go-cve-dictionary']['abs_path']}/go-cve-dictionary fetchnvd -years $number; number=`expr $number + 1`; done"
-  creates "#{node['user']['home']}/cve.sqlite3"
+  cwd user_home
+  command "number=#{node['vuls']['go-cve-dictionary']['nvd']['start_year']};while [ \"$number\" -lt #{node['vuls']['go-cve-dictionary']['nvd']['end_year']} ]; do #{go_cve_distionary_abs_path}/go-cve-dictionary fetchnvd -years $number; number=`expr $number + 1`; done"
+  creates "#{user_home}/cve.sqlite3"
 end
