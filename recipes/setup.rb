@@ -12,7 +12,7 @@
 user_home = "/home/#{node['user']['name']}"
 go_root = "#{node['golang']['root_dir']}/go"
 go_path = "#{user_home}/go"
-go_bin = "#{go_root}/bin"
+go_bin = "#{go_path}/bin"
 go_src_name = "go#{node['golang']['version']}.linux-#{node['golang']['arch']}.tar.gz"
 go_src_url = "https://storage.googleapis.com/golang/#{go_src_name}"
 go_cve_dictionary_abs_path = "#{go_path}/src/#{node['vuls']['go-cve-dictionary']['path']}"
