@@ -54,7 +54,6 @@ ruby_block "source_go_env" do
     ENV['GOROOT'] = go_root
     ENV['GO15VENDOREXPERIMENT'] = "1"
   end
-  user node['user']['name']
   action :run
 end
 
