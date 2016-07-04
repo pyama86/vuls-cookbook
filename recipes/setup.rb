@@ -93,7 +93,7 @@ end
 
 execute "install package for scanner" do
   cwd scanner_abs_path
-  command "#{go_bin}/glide install && #{go_cmd}/go build"
+  command "#{go_bin}/glide install && #{go_bin}/go build"
 end
 
 execute 'fetch NVD' do
