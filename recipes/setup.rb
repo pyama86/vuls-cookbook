@@ -71,7 +71,7 @@ directory '/var/log/vuls' do
 end
 
 execute "install glide" do
-  command "#{go_cmd}/go get github.com/Masterminds/glide"
+  command "#{go_cmd} get github.com/Masterminds/glide"
   user node['user']['name']
 end
 
@@ -83,7 +83,7 @@ end
 
 execute "install package for go-cve-dictionary" do
   cwd go_cve_dictionary_abs_path
-  command "#{go_bin}/glide install && #{go_cmd}/go build"
+  command "#{go_bin}/glide install && #{go_cmd} build"
 end
 
 execute "git clone scanner" do
@@ -94,7 +94,7 @@ end
 
 execute "install package for scanner" do
   cwd scanner_abs_path
-  command "#{go_bin}/glide install && #{go_cmd}/go build"
+  command "#{go_bin}/glide install && #{go_cmd} build"
 end
 
 execute 'fetch NVD' do
