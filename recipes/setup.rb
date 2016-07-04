@@ -72,7 +72,6 @@ end
 
 execute "install glide" do
   command "#{go_cmd} get github.com/Masterminds/glide"
-  user node['user']['name']
 end
 
 execute "git clone go-cve-dictionary" do
