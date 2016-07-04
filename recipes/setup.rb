@@ -54,6 +54,7 @@ ruby_block "source_go_env" do
     ENV['GOROOT'] = go_root
     ENV['GO15VENDOREXPERIMENT'] = "1"
   end
+  user node['user']['name']
   action :run
 end
 
@@ -90,6 +91,7 @@ end
 execute "install package for go-cve-dictionary" do
   cwd go_cve_dictionary_abs_path
   command "#{go_bin}/glide install && #{go_cmd} build"
+  user node['user']['name']
 end
 
 execute "git clone scanner" do
@@ -101,10 +103,12 @@ end
 execute "install package for scanner" do
   cwd scanner_abs_path
   command "#{go_bin}/glide install && #{go_cmd} build"
+  user node['user']['name']
 end
 
 execute 'fetch NVD' do
   cwd user_home
   command "number=#{node['vuls']['go-cve-dictionary']['nvd']['start_year']};while [ \"$number\" -lt #{node['vuls']['go-cve-dictionary']['nvd']['end_year']} ]; do #{go_cve_dictionary_abs_path}/go-cve-dictionary fetchnvd -years $number; number=`expr $number + 1`; done"
+  user node['user']['name']
   creates "#{user_home}/cve.sqlite3"
 end
