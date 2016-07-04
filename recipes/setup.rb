@@ -64,6 +64,12 @@ execute 'install golang' do
   notifies :create, "ruby_block[source_go_env]", :immediately
 end
 
+directory "#{user_home}/go" do
+  owner node['user']['name']
+  group node['user']['name']
+  mode '0755'
+end
+
 directory '/var/log/vuls' do
   owner node['user']['name']
   group node['user']['name']
@@ -72,6 +78,7 @@ end
 
 execute "install glide" do
   command "GOPATH=#{go_path} && #{go_cmd} get github.com/Masterminds/glide"
+  user node['user']['name']
 end
 
 execute "git clone go-cve-dictionary" do
