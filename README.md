@@ -33,8 +33,6 @@ Detail actions in this is below.
 # Dependency
 
 - chef 12
-- AmazonLinux
-- 
 
 # Configure
 
