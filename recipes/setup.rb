@@ -77,8 +77,12 @@ directory '/var/log/vuls' do
 end
 
 execute "install glide" do
-  command "GOPATH=#{go_path} && #{go_cmd} get github.com/Masterminds/glide"
+  command "#{go_cmd} get github.com/Masterminds/glide"
   user node['user']['name']
+  environment ({
+    'GOPATH' => go_path,
+    'GOROOT' => go_root
+  })
 end
 
 execute "git clone go-cve-dictionary" do
@@ -92,8 +96,7 @@ execute "install package and build for go-cve-dictionary" do
   command "#{go_bin}/glide install && #{go_cmd} build"
   environment ({
     'GOPATH' => go_path,
-    'GOROOT' => go_root,
-    'PATH' => "$PATH:#{go_root}/bin:#{go_path}/bin"
+    'GOROOT' => go_root
   })
   user node['user']['name']
 end
@@ -109,8 +112,7 @@ execute "install package and build for scanner" do
   command "#{go_bin}/glide install && #{go_cmd} build"
   environment ({
     'GOPATH' => go_path,
-    'GOROOT' => go_root,
-    'PATH' => "$PATH:#{go_root}/bin:#{go_path}/bin"
+    'GOROOT' => go_root
   })
   user node['user']['name']
 end
