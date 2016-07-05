@@ -87,35 +87,31 @@ execute "git clone go-cve-dictionary" do
   group node['user']['name']
 end
 
-execute "glide install" do
+execute "install package and build for go-cve-dictionary" do
   cwd go_cve_dictionary_abs_path
-  command "PATH=$PATH:#{go_root}/bin:#{go_path}/bin &&
-          GOPATH=#{go_path} GOROOT=#{go_root} #{go_bin}/glide install"
-  user node['user']['name']
-end
-
-execute "build go-cve-dictionary" do
-  cwd go_cve_dictionary_abs_path
-  command "GOPATH=#{go_path} GOROOT=#{go_root} #{go_cmd} build"
+  command "#{go_bin}/glide install && #{go_cmd} build"
+  environment ({
+    'GOPATH' => go_parh,
+    'GOROOT' => go_root,
+    'PATH' => "$PATH:#{go_root}/bin:#{go_path}/bin"
+  })
   user node['user']['name']
 end
 
 execute "git clone scanner" do
-  command "git clone http://#{node['vuls']["scanner"]['path']} -b #{node['vuls']['scanner']['branch']} #{go_cve_dictionary_abs_path}"
+  command "git clone http://#{node['vuls']["scanner"]['path']} -b #{node['vuls']['scanner']['branch']} #{scanner_abs_path}"
   user node['user']['name']
   group node['user']['name']
 end
 
-execute "glide install" do
+execute "install package and build for scanner" do
   cwd scanner_abs_path
-  command "PATH=$PATH:#{go_root}/bin:#{go_path}/bin &&
-          GOPATH=#{go_path} GOROOT=#{go_root} #{go_bin}/glide install"
-  user node['user']['name']
-end
-
-execute "build scanner" do
-  cwd scanner_abs_path
-  command "GOPATH=#{go_path} GOROOT=#{go_root} #{go_cmd} build"
+  command "#{go_bin}/glide install && #{go_cmd} build"
+  environment ({
+    'GOPATH' => go_parh,
+    'GOROOT' => go_root,
+    'PATH' => "$PATH:#{go_root}/bin:#{go_path}/bin"
+  })
   user node['user']['name']
 end
 
