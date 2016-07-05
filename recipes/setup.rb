@@ -88,8 +88,7 @@ execute "git clone go-cve-dictionary" do
 end
 
 execute "install package for go-cve-dictionary" do
-  cwd go_cve_dictionary_abs_path
-  command "#{go_bin}/glide install && #{go_cmd} build"
+  command "cd #{go_cve_dictionary_abs_path} && #{go_bin}/glide install && #{go_cmd} build"
   user node['user']['name']
 end
 
