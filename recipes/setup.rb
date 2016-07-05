@@ -89,7 +89,8 @@ end
 
 execute "glide install" do
   cwd go_cve_dictionary_abs_path
-  command "PATH=$PATH:#{go_root}/bin:#{go_path}/bin && #{go_bin}/glide install"
+  command "PATH=$PATH:#{go_root}/bin:#{go_path}/bin &&
+          GOPATH=#{go_path} GOROOT=#{go_root} #{go_bin}/glide install"
   user node['user']['name']
 end
 
