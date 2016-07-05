@@ -91,7 +91,7 @@ execute "install package and build for go-cve-dictionary" do
   cwd go_cve_dictionary_abs_path
   command "#{go_bin}/glide install && #{go_cmd} build"
   environment ({
-    'GOPATH' => go_parh,
+    'GOPATH' => go_path,
     'GOROOT' => go_root,
     'PATH' => "$PATH:#{go_root}/bin:#{go_path}/bin"
   })
@@ -108,7 +108,7 @@ execute "install package and build for scanner" do
   cwd scanner_abs_path
   command "#{go_bin}/glide install && #{go_cmd} build"
   environment ({
-    'GOPATH' => go_parh,
+    'GOPATH' => go_path,
     'GOROOT' => go_root,
     'PATH' => "$PATH:#{go_root}/bin:#{go_path}/bin"
   })
