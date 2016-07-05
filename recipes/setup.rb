@@ -113,7 +113,8 @@ execute "install package and build for scanner" do
   command "#{go_bin}/glide install && #{go_cmd} build"
   environment ({
     'GOPATH' => go_path,
-    'GOROOT' => go_root
+    'GOROOT' => go_root,
+    'PATH' => "#{ENV['PATH']}:#{go_root}/bin:#{go_path}/bin"
   })
   user node['user']['name']
 end
