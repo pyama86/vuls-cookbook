@@ -97,7 +97,7 @@ execute "install package and build for go-cve-dictionary" do
   environment ({
     'GOPATH' => go_path,
     'GOROOT' => go_root,
-    'PATH' => '$PATH:$GOROOT/bin:$GOPATH/bin'
+    'PATH' => "#{ENV['PATH']}:#{go_root}/bin:#{go_path}/bin"
   })
   user node['user']['name']
 end
