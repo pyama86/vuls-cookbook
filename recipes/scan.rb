@@ -42,6 +42,6 @@ end
 execute 'vuls scan' do
   user node['user']['name']
   cwd user_home
-  command "#{scanner_abs_path}/vuls scan"
+  command "#{scanner_abs_path}/vuls scan --cve-dictionary-dbpath=#{user_home}/cve.sqlite3"
   only_if { has_server }
 end
