@@ -96,7 +96,8 @@ execute "install package and build for go-cve-dictionary" do
   command "#{go_bin}/glide install && #{go_cmd} build"
   environment ({
     'GOPATH' => go_path,
-    'GOROOT' => go_root
+    'GOROOT' => go_root,
+    'PATH' => '$PATH:$GOROOT/bin:$GOPATH/bin'
   })
   user node['user']['name']
 end
