@@ -96,7 +96,7 @@ end
 
 execute "build go-cve-dictionary" do
   cwd go_cve_dictionary_abs_path
-  command "#{go_cmd} build"
+  command "GOPATH=#{go_path} GOROOT=#{go_root} #{go_cmd} build"
   user node['user']['name']
 end
 
@@ -106,9 +106,16 @@ execute "git clone scanner" do
   group node['user']['name']
 end
 
-execute "install package for scanner" do
+execute "glide install" do
   cwd scanner_abs_path
-  command "#{go_bin}/glide install && #{go_cmd} build"
+  command "PATH=$PATH:#{go_root}/bin:#{go_path}/bin &&
+          GOPATH=#{go_path} GOROOT=#{go_root} #{go_bin}/glide install"
+  user node['user']['name']
+end
+
+execute "build scanner" do
+  cwd scanner_abs_path
+  command "GOPATH=#{go_path} GOROOT=#{go_root} #{go_cmd} build"
   user node['user']['name']
 end
 
